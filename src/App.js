@@ -1,32 +1,38 @@
-import { Component } from "react";
+import { useReducer } from "react";
 import Gallary from "./components/Gallary/Gallary";
 import Modal from "./components/Modal/Modal";
 
-class App extends Component {
-  state = {
-    id: "",
-  }
+function reducer(state, action) {
+  const { type, peyload } = action;
 
-  onClick = (id) => {
-    this.setState({
-      id,
-    });
+  switch (type) {
+    case "id":
+      return peyload;
+
+    case "reset":
+      return "";
+    default:
+      return state;
   }
-  onClose = () => {
-    this.setState({
-      id: "",
-    });
-  }
-  render
-    () {
-    const { id } = this.state
-    return (
-      <div>
-        { !!id && <Modal onClose={ this.onClose } id={ id } /> }
-        <Gallary  onClick={ this.onClick } />
-      </div>
-    );
-  }
+}
+
+function App() {
+  const [id, dispatch] = useReducer(reducer, "");
+
+  const onClick = (id) => {
+    dispatch({ type: "id", peyload: id });
+  };
+
+  const onClose = () => {
+    dispatch({ type: "reset" });
+  };
+
+  return (
+    <div>
+      {!!id && <Modal onClose={onClose} id={id} />}
+      <Gallary onClick={onClick} />
+    </div>
+  );
 }
 
 export default App;
